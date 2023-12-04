@@ -6,7 +6,7 @@ import ValuesList from './ValuesList'
 const Body = () => {
   const [values, setValues] = useState({})
   const [errorMessage, setErrorMessage] = useState('')
-  const [currency, setCurrency] = useState('')
+  const [currency, setCurrency] = useState('Российский рубль')
 
   useEffect(() => {
     axios

@@ -1,18 +1,34 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Grid from '@mui/material/Unstable_Grid2'
 import { Typography } from '@mui/material'
 import getValuesList from '../utils/getValuesList'
 import IconButton from '@mui/material/IconButton'
 import StarRateIcon from '@mui/icons-material/StarRate'
 import StarIcon from '@mui/icons-material/StarBorder'
+import charCode from '../constants/charCode'
 
 type ListParams = {
-  values: {}
+  values: any
   currency: string
 }
 
 const ValuesList = ({ values, currency }: ListParams) => {
   const [favorites, setFavorites] = useState<string[]>([])
+  const [conditionalUnit, setConditionalUnit] = useState(1)
+
+  useEffect(() => {
+    let currentCurrency = Object.keys(charCode).find(
+      (key) => charCode[key as keyof typeof charCode] === currency
+    )
+    if (Object.keys(values).length && currentCurrency !== 'RUB') {
+      setConditionalUnit(
+        values[currentCurrency as keyof typeof charCode].Nominal
+      )
+    } else {
+      setConditionalUnit(1)
+    }
+  }, [currency, values])
+
   return (
     <>
       <Grid
@@ -49,7 +65,7 @@ const ValuesList = ({ values, currency }: ListParams) => {
         </Grid>
         <Grid xs={2}>
           <Typography variant="h5" component="h2">
-            Курс
+            Курс за {conditionalUnit} у.е.
           </Typography>
         </Grid>
         {getValuesList(values, currency, favorites).map((el) => (
